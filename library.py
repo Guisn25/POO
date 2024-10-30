@@ -33,17 +33,16 @@ class BookItem:
             self.status = Status.AVAILABLE
             return True
         return False
-
-
+        
 @dataclass
 class Member:
     name: str
     member_id: int
-    borrowed_books: List[Book]
+    borrowed_books: List[BookItem]
 
     def borrow_book(self, book_item: BookItem) -> bool:
         if book_item.Status == Status.AVAILABLE:
-            self.borrowed_books.append(book_item.book)
+            self.borrowed_books.append(book_item)
             book_item.status = Status.LOANED
             book_item.date_borrowed = datetime.datetime.now()
             return True
@@ -51,7 +50,7 @@ class Member:
 
     def return_book(self, book_item: BookItem) -> bool:
         if book_item.Status == Status.LOANED:
-            self.borrowed_books.remove(book_item.book)
+            self.borrowed_books.remove(book_item)
             book_item.status = Status.AVAILABLE 
             book_item.date_borrowed = None
             return True
@@ -60,16 +59,13 @@ class Member:
 @dataclass
 class Library:
     Items: List[BookItem] = field(default_factory = list)
-    Members: List[Members] = field(default_factory = list)
+    Members: List[Member] = field(default_factory = list)
 
     def add_book_item(self, book_item: BookItem):
         self.Items.append(book_item)
     
     def add_member(self, member: Member):
         self.Members.append(member)
-
-
-
 
 def main():
     book1 = Book(title = "The Great Gatsby", authors = ["F. Scott Fitzgerald"], edition = 1)
